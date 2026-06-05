@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Claude Code
+.claude/
+
+# Original zip archives (large, not needed in repo)
+*.zip
+
+# Video files — too large for GitHub (upload directly to Namecheap via FTP/cPanel)
+assets/*.mp4
+assets/animation-videos/
+assets/event-videos/
+
+# Raw unprocessed photos folder
+assets/photos/
+
+# Dev server script
+serve_insurance.py
+
+# Misc
+*.log
+Thumbs.db
