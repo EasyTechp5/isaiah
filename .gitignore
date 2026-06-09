@@ -9,8 +9,7 @@
 # Original zip archives (large, not needed in repo)
 *.zip
 
-# Video files — too large for GitHub (upload directly to Namecheap via FTP/cPanel)
-assets/*.mp4
+# Raw duplicate video folders (only the flat assets/ copies are needed)
 assets/animation-videos/
 assets/event-videos/
 
