@@ -844,6 +844,80 @@ button, input, textarea, select { font: inherit; }
   outline: none;
 }
 
+/* ── YouTube placeholder cards ──────────────────────────────── */
+.yt-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0d0d1a 0%, #12102a 60%, #1a1226 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+.yt-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(201,147,58,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.yt-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+.yt-pending-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  padding: 1rem;
+  z-index: 1;
+}
+.yt-play-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  border: 1.5px solid rgba(201,147,58,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+}
+.yt-play-icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-left: 0.15rem;
+}
+.yt-coming-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+/* When the card is inside a light section, adjust placeholder colours */
+.work-card--light .yt-frame {
+  background: linear-gradient(135deg, #f0eef8 0%, #e8e4f5 60%, #ece8f8 100%);
+}
+.work-card--light .yt-frame::before {
+  background: radial-gradient(ellipse at 50% 50%, rgba(201,147,58,0.06) 0%, transparent 70%);
+}
+.work-card--light .yt-play-icon {
+  background: rgba(201,147,58,0.1);
+  border-color: rgba(201,147,58,0.3);
+}
+.work-card--light .yt-coming-label {
+  color: var(--muted-dark);
+}
+
 /* ── Pricing ─────────────────────────────────────────────── */
 .pricing-grid {
   display: grid;
