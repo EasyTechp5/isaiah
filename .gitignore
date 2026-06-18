@@ -19,9 +19,6 @@ assets/photos/
 # Dev server script
 serve_insurance.py
 
-# Video files — served via raw.githubusercontent.com, not from the repo
-assets/*.mp4
-
 # Misc
 *.log
 Thumbs.db

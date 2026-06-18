@@ -1,0 +1,3 @@
+# Video files are served via raw.githubusercontent.com
+# Exclude from Vercel deploy to keep build size small
+assets/*.mp4
