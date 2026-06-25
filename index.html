@@ -88,17 +88,11 @@
 
           <div class="hero-media">
             <div class="hero-frame">
-              <video class="hero-reel" autoplay muted loop playsinline>
-                <source src="https://raw.githubusercontent.com/EasyTechp5/isaiah/main/assets/anim-fountain-university.mp4" type="video/mp4" />
-              </video>
+              <img class="hero-reel" src="assets/hero-photo.jpg" alt="Isaiah Afolabi Oluwatosin — featured work" />
               <div class="hero-frame-overlay"></div>
-              <button class="hero-mute-btn" id="hero-mute-btn" aria-label="Unmute video">
-                <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-                <svg class="icon-sound" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-              </button>
               <div class="hero-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                Featured reel
+                Featured work
               </div>
             </div>
           </div>
@@ -891,18 +885,6 @@
         navToggle.setAttribute('aria-expanded', 'false');
       });
     });
-
-    /* ── Hero mute toggle ─────────────────────────────────── */
-    const heroMuteBtn = document.getElementById('hero-mute-btn');
-    const heroReel = document.querySelector('.hero-reel');
-    if (heroMuteBtn && heroReel) {
-      heroMuteBtn.addEventListener('click', () => {
-        heroReel.muted = !heroReel.muted;
-        heroMuteBtn.querySelector('.icon-muted').hidden = !heroReel.muted;
-        heroMuteBtn.querySelector('.icon-sound').hidden = heroReel.muted;
-        heroMuteBtn.setAttribute('aria-label', heroReel.muted ? 'Unmute video' : 'Mute video');
-      });
-    }
 
     /* ── Count-up animation ───────────────────────────────── */
     const countEls = document.querySelectorAll('.count-up');
