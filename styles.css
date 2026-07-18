@@ -453,7 +453,7 @@ button, input, textarea, select { font: inherit; }
 .about-photo-wrap {
   border-radius: var(--radius-xl);
   overflow: hidden;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   background: var(--bg-light2);
   box-shadow: 0 32px 80px rgba(0,0,0,0.12);
 }
@@ -638,11 +638,11 @@ button, input, textarea, select { font: inherit; }
 
 .services-secondary { border-top: 1px solid var(--border); padding-top: 2.5rem; }
 .services-sec-title {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.55);
   margin: 0 0 1.25rem;
 }
 .services-sec-grid {
@@ -654,13 +654,13 @@ button, input, textarea, select { font: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.65rem 1.1rem;
+  padding: 0.7rem 1.2rem;
   border-radius: 999px;
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: rgba(255,255,255,0.65);
+  border: 1px solid rgba(255,255,255,0.16);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.92);
   transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 .service-pill:hover {
