@@ -194,58 +194,6 @@
         </div>
       </section>
 
-      <!-- ─── Photo Gallery (Parallax scroll) ──────────── -->
-      <section id="gallery" class="gallery-section">
-        <div class="gallery-header container">
-          <div class="section-label">Behind the lens</div>
-          <h2 class="section-title">On set &amp; <em>in the field</em></h2>
-          <p class="section-sub">A glimpse into the work behind the work — productions, events, and cinematic moments captured on location.</p>
-        </div>
-
-        <div class="parallax-gallery" id="parallax-gallery">
-          <div class="gallery-sticky">
-            <div class="gallery-grid">
-              <!-- Column 1 -->
-              <div class="gallery-col" data-speed="-8">
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-1.jpg" alt="On-set photography" loading="lazy" />
-                </div>
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-4.jpg" alt="Cinematography" loading="lazy" />
-                </div>
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-7.jpg" alt="Production" loading="lazy" />
-                </div>
-              </div>
-              <!-- Column 2 -->
-              <div class="gallery-col gallery-col--offset" data-speed="5">
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-2.jpg" alt="Event coverage" loading="lazy" />
-                </div>
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-5.jpg" alt="Behind the scenes" loading="lazy" />
-                </div>
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-8.jpg" alt="Film production" loading="lazy" />
-                </div>
-              </div>
-              <!-- Column 3 -->
-              <div class="gallery-col" data-speed="-6">
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-3.jpg" alt="Motion graphics" loading="lazy" />
-                </div>
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-6.jpg" alt="Studio work" loading="lazy" />
-                </div>
-                <div class="gallery-img-wrap">
-                  <img src="assets/gallery-9.jpg" alt="Documentary" loading="lazy" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- ─── Services ──────────────────────────────────── -->
       <section id="services" class="section section-dark reveal-section">
         <div class="container">
@@ -1057,29 +1005,6 @@
       });
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal-section, .reveal-item').forEach(el => revealObserver.observe(el));
-
-    /* ── Parallax photo gallery ───────────────────────────── */
-    const gallerySection = document.getElementById('parallax-gallery');
-    const galleryCols = document.querySelectorAll('.gallery-col');
-
-    function updateGalleryParallax() {
-      if (!gallerySection) return;
-      const rect = gallerySection.getBoundingClientRect();
-      const viewH = window.innerHeight;
-      // progress: 0 = gallery top hits bottom of viewport, 1 = gallery bottom hits top
-      const totalH = rect.height + viewH;
-      const scrolled = viewH - rect.top;
-      const progress = Math.max(0, Math.min(1, scrolled / totalH));
-
-      galleryCols.forEach(col => {
-        const speed = parseFloat(col.dataset.speed || 0);
-        const offset = (progress - 0.5) * speed * 2;
-        col.style.transform = `translateY(${offset}%)`;
-      });
-    }
-
-    window.addEventListener('scroll', updateGalleryParallax, { passive: true });
-    updateGalleryParallax();
 
     /* ── Video thumbnails ─────────────────────────────────── */
     function attachThumbnail(card) {
