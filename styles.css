@@ -480,20 +480,13 @@ button, input, textarea, select { font: inherit; }
   font-weight: 500;
 }
 .about-right { display: grid; gap: 1.75rem; }
-.about-lead {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.45rem;
-  font-weight: 400;
-  color: var(--text-dark);
-  line-height: 1.6;
-  letter-spacing: 0.01em;
-  margin: 0;
-}
+.about-lead,
 .about-body {
   margin: 0;
-  color: var(--muted-dark);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   font-size: 1.02rem;
-  font-weight: 300;
+  font-weight: 400;
+  color: var(--text-dark);
   line-height: 1.85;
 }
 .about-skills {
