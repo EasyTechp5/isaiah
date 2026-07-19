@@ -107,6 +107,11 @@ button, input, textarea, select { font: inherit; }
 .reveal-item:nth-child(2) { transition-delay: 0.1s; }
 .reveal-item:nth-child(3) { transition-delay: 0.2s; }
 .reveal-item:nth-child(4) { transition-delay: 0.3s; }
+.reveal-item:nth-child(5) { transition-delay: 0.36s; }
+.reveal-item:nth-child(6) { transition-delay: 0.42s; }
+.reveal-item:nth-child(7) { transition-delay: 0.48s; }
+.reveal-item:nth-child(8) { transition-delay: 0.54s; }
+.reveal-item:nth-child(9) { transition-delay: 0.6s; }
 
 /* ── Buttons ─────────────────────────────────────────────── */
 .button {
@@ -153,8 +158,9 @@ button, input, textarea, select { font: inherit; }
   right: 0;
   z-index: 100;
   padding: 0;
-  transition: background 0.3s, box-shadow 0.3s;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.35s ease;
 }
+.site-header.header-hidden { transform: translateY(-100%); }
 .site-header.scrolled {
   background: rgba(7,7,17,0.92);
   backdrop-filter: blur(16px);
@@ -1284,4 +1290,152 @@ button, input, textarea, select { font: inherit; }
   .reveal-section, .reveal-item { opacity: 1 !important; transform: none !important; transition: none !important; }
   .marquee-track        { animation: none !important; }
   .eyebrow-dot          { animation: none !important; }
+}
+
+/* ── Motion & interaction enhancements ───────────────────── */
+
+/* Scroll progress bar */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), #ff6a5e);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 200;
+  pointer-events: none;
+}
+
+/* Back-to-top */
+.back-to-top {
+  position: fixed;
+  right: 1.4rem;
+  bottom: 1.4rem;
+  z-index: 150;
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  background: var(--gold);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(224,32,32,0.35);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s, background 0.2s;
+}
+.back-to-top.visible { opacity: 1; transform: none; pointer-events: auto; }
+.back-to-top:hover { transform: translateY(-3px); background: #c51818; }
+.back-to-top:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+/* Hero entrance sequence */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-copy > * { opacity: 0; animation: rise-in 0.8s cubic-bezier(0.22, 0.8, 0.3, 1) forwards; }
+.hero-copy > *:nth-child(1) { animation-delay: 0.05s; }
+.hero-copy > *:nth-child(2) { animation-delay: 0.15s; }
+.hero-copy > *:nth-child(3) { animation-delay: 0.28s; }
+.hero-copy > *:nth-child(4) { animation-delay: 0.4s; }
+.hero-copy > *:nth-child(5) { animation-delay: 0.5s; }
+.hero-copy > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes frame-in {
+  from { opacity: 0; transform: scale(0.94) translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+.hero-media { perspective: 900px; }
+.hero-frame {
+  animation: frame-in 1s 0.35s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+  transition: transform 0.25s ease-out;
+  will-change: transform;
+}
+
+/* Slow Ken Burns drift on the hero photo */
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.07); } }
+.hero-reel { animation: kenburns 16s ease-in-out 1.5s infinite alternate; }
+
+/* Animated underline drawn beneath the hero's italic word */
+@keyframes underline-draw { to { transform: scaleX(1); } }
+.hero-section h1 em { position: relative; display: inline-block; }
+.hero-section h1 em::after {
+  content: '';
+  position: absolute;
+  left: 0.02em; right: 0.05em; bottom: 0.04em;
+  height: 0.08em;
+  border-radius: 999px;
+  background: var(--gold);
+  opacity: 0.7;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: underline-draw 0.7s 1s cubic-bezier(0.22, 0.8, 0.3, 1) forwards;
+}
+
+/* Section-title italics get an underline sweep when the section reveals */
+.section-title em { position: relative; display: inline-block; }
+.section-title em::after {
+  content: '';
+  position: absolute;
+  left: 0.02em; right: 0.05em; bottom: 0.06em;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--gold);
+  opacity: 0.55;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.8s cubic-bezier(0.22, 0.8, 0.3, 1) 0.35s;
+}
+.reveal-section.revealed .section-title em::after { transform: scaleX(1); }
+
+/* Media zoom on card hover */
+.yt-thumb { transition: transform 0.5s ease; }
+.work-card:hover .yt-thumb { transform: scale(1.05); }
+.reel-video-wrap video { transition: transform 0.5s ease; }
+.reel-card:hover .reel-video-wrap video { transform: scale(1.03); }
+.reel-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.reel-card:hover { transform: translateY(-4px); }
+
+/* Pulsing play buttons */
+@keyframes play-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(224,32,32,0.45); }
+  70%  { box-shadow: 0 0 0 15px rgba(224,32,32,0); }
+  100% { box-shadow: 0 0 0 0 rgba(224,32,32,0); }
+}
+.yt-play-btn, .vid-play-btn { animation: play-pulse 2.6s ease-out infinite; }
+
+/* Marquee pauses while hovered */
+.marquee-strip:hover .marquee-track { animation-play-state: paused; }
+
+/* Sheen sweep across primary buttons */
+.button { position: relative; overflow: hidden; }
+.button-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 55%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: translateX(-220%) skewX(-20deg);
+  transition: transform 0.65s ease;
+  pointer-events: none;
+}
+.button-primary:hover::after { transform: translateX(300%) skewX(-20deg); }
+
+/* Reduced motion: switch every enhancement off */
+@media (prefers-reduced-motion: reduce) {
+  .hero-copy > *, .hero-frame, .hero-reel,
+  .hero h1 em::after, .hero-section h1 em::after,
+  .yt-play-btn, .vid-play-btn {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .section-title em::after { transition: none !important; transform: scaleX(1) !important; }
+  .site-header, .back-to-top, .button-primary::after,
+  .yt-thumb, .reel-video-wrap video, .reel-card { transition: none !important; }
+  .work-card:hover .yt-thumb, .reel-card:hover .reel-video-wrap video { transform: none; }
 }
