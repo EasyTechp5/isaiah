@@ -21,9 +21,12 @@
     <meta name="twitter:description" content="Video editing, motion graphics and cinematography for brands, organizations and creators worldwide." />
     <meta name="twitter:image" content="https://isaiah.digitlabmedia.com/assets/og-image.jpg" />
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://i.ytimg.com; media-src 'self' https://raw.githubusercontent.com; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self'; form-action 'none'; object-src 'none'; base-uri 'self'" />
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="assets/hero-poster.jpg" as="image" fetchpriority="high" />
     <link rel="stylesheet" href="styles.css" />
     <script type="application/ld+json">
     {
@@ -36,6 +39,12 @@
       "image": "https://isaiah.digitlabmedia.com/assets/isaiah-about.jpg",
       "email": "afolabiisaiah60@gmail.com",
       "sameAs": ["https://instagram.com/afolabi_isaiah_"],
+      "affiliation": {
+        "@type": "Organization",
+        "name": "DigitLab Media",
+        "url": "https://digitlabmedia.com",
+        "logo": "https://isaiah.digitlabmedia.com/assets/logo-dark.png"
+      },
       "knowsAbout": ["Video editing", "Motion graphics", "Cinematography", "Color grading", "Sound design"],
       "address": { "@type": "PostalAddress", "addressCountry": "NG" }
     }
@@ -51,9 +60,9 @@
     <header class="site-header" id="site-header">
       <div class="container header-inner">
         <a class="brand" href="#home">
-          <span class="brand-word">Isaiah</span>
-          <span class="brand-dot"></span>
-          <span class="brand-sub">Afolabi</span>
+          <img class="brand-logo" src="assets/logo-white.png" alt="DigitLab Media" width="800" height="285" />
+          <span class="brand-divider" aria-hidden="true"></span>
+          <span class="brand-name">Isaiah Afolabi</span>
         </a>
         <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="site-navigation">
           <span></span><span></span><span></span>
@@ -107,8 +116,19 @@
           </div>
 
           <div class="hero-media">
-            <figure class="hero-frame">
-              <img class="hero-photo" src="assets/hero-photo.jpg" alt="Isaiah Afolabi operating a camera on a gimbal at an event" width="1600" height="1280" fetchpriority="high" />
+            <figure class="hero-frame" id="hero-frame">
+              <video class="hero-video" id="hero-video" autoplay muted playsinline disablepictureinpicture preload="auto"
+                     poster="assets/hero-poster.jpg" width="1280" height="720"
+                     aria-label="Isaiah Afolabi operating a camera on a gimbal at an event">
+                <source src="assets/video/hero-reel.mp4" type="video/mp4" />
+              </video>
+              <div class="hero-scrim" aria-hidden="true"></div>
+              <img class="hero-logo" src="assets/logo-white.png" alt="DigitLab Media" width="800" height="285" />
+              <button class="hero-ctl" id="hero-toggle" type="button" aria-label="Pause video">
+                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20"/></svg>
+              </button>
+              <div class="hero-progress" aria-hidden="true"><span></span></div>
             </figure>
           </div>
 
@@ -784,6 +804,8 @@
                 <p class="contact-lead">Available for remote projects worldwide. I work with creators, brands and organizations in any time zone.</p>
               </div>
 
+              <img class="contact-logo" src="assets/logo-dark.png" alt="DigitLab Media" width="800" height="285" loading="lazy" />
+
               <div class="contact-links">
                 <a href="mailto:afolabiisaiah60@gmail.com?subject=Video%20project%20inquiry" class="contact-link">
                   <span class="contact-link-label">Email</span>
@@ -839,8 +861,8 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div class="footer-brand">
-          <span class="brand">Isaiah<span class="brand-dot"></span>Afolabi</span>
-          <p>Video Editor · Motion Graphics Designer · Cinematographer</p>
+          <img class="footer-logo" src="assets/logo-white.png" alt="DigitLab Media" width="800" height="285" loading="lazy" />
+          <p>Isaiah Afolabi · Video Editor · Motion Graphics Designer · Cinematographer</p>
         </div>
         <div class="footer-links">
           <a href="#about">About</a>
@@ -904,6 +926,72 @@
     updateScrollUI();
 
     backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    /* ── Hero video ───────────────────────────────────────────
+       Muted autoplay loop with a pause control (WCAG 2.2.2: moving content
+       that runs over 5 seconds must be pausable). Behaviour:
+       - the loop dips to black just before the end, because the clip
+         changes background partway through and a hard cut would jar
+       - pauses while off-screen to save battery and data
+       - honours prefers-reduced-motion: stays on the poster until played
+    ─────────────────────────────────────────────────────── */
+    (() => {
+      const frame = document.getElementById('hero-frame');
+      const video = document.getElementById('hero-video');
+      const toggle = document.getElementById('hero-toggle');
+      const bar = document.querySelector('.hero-progress span');
+      if (!frame || !video || !toggle) return;
+
+      const DIP_SECONDS = 0.35;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let userPaused = reduceMotion;
+      let inView = true;
+      let raf = 0;
+
+      const setState = (playing) => {
+        frame.classList.toggle('is-paused', !playing);
+        toggle.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
+      };
+      const play = () => video.play().then(() => setState(true)).catch(() => setState(false));
+      const pause = () => { video.pause(); setState(false); };
+
+      const tick = () => {
+        const d = video.duration;
+        if (d) {
+          bar.style.transform = `scaleX(${Math.min(video.currentTime / d, 1)})`;
+          video.classList.toggle('is-dipping', d - video.currentTime < DIP_SECONDS);
+        }
+        raf = requestAnimationFrame(tick);
+      };
+
+      video.addEventListener('playing', () => { cancelAnimationFrame(raf); tick(); setState(true); });
+      video.addEventListener('pause', () => cancelAnimationFrame(raf));
+      video.addEventListener('ended', () => {
+        video.currentTime = 0;
+        video.classList.remove('is-dipping');
+        if (!userPaused && inView) play();
+      });
+      video.addEventListener('error', () => { toggle.hidden = true; bar.parentElement.hidden = true; });
+
+      toggle.addEventListener('click', () => {
+        userPaused = !video.paused;      // playing now → the visitor is pausing it
+        if (video.paused) play(); else pause();
+      });
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([entry]) => {
+          inView = entry.isIntersecting;
+          if (!inView) video.pause();
+          else if (!userPaused) play();
+        }, { threshold: 0.25 }).observe(frame);
+      }
+
+      if (reduceMotion) {
+        video.removeAttribute('autoplay');
+        video.pause();
+        setState(false);
+      }
+    })();
 
     /* ── Nav toggle ───────────────────────────────────────── */
     const navToggle = document.querySelector('.nav-toggle');
