@@ -254,11 +254,11 @@ button { font: inherit; }
   gap: 4rem;
   align-items: center;
 }
-.hero-copy { display: grid; gap: 1.6rem; justify-items: start; }
+.hero-copy { display: grid; gap: 1.4rem; justify-items: start; }
 
 .eyebrow {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -267,23 +267,23 @@ button { font: inherit; }
 .hero-copy h1 {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: clamp(2.4rem, 3.9vw, 3.6rem);
+  font-size: clamp(2rem, 3vw, 2.85rem);
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.14;
   letter-spacing: -0.02em;
   text-wrap: balance;
   color: #fff;
 }
-.hero-text { display: grid; gap: 1.1rem; max-width: 46ch; }
+.hero-text { display: grid; gap: 0.95rem; max-width: 44ch; }
 .hero-text p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.94rem;
   line-height: 1.75;
-  color: rgba(255,255,255,0.68);
+  color: rgba(255,255,255,0.66);
   text-wrap: pretty;               /* avoids a single orphaned word on the last line */
 }
 .hero-text .hero-lead {            /* the standfirst: larger and brighter, so the eye has a clear order */
-  font-size: clamp(1.15rem, 1.45vw, 1.35rem);
+  font-size: clamp(1.02rem, 1.2vw, 1.15rem);
   font-weight: 500;
   line-height: 1.45;
   letter-spacing: -0.005em;
