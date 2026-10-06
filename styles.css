@@ -295,14 +295,15 @@ button { font: inherit; }
 .stat-item strong { font-size: 1.9rem; font-weight: 700; line-height: 1; color: #fff; }
 .stat-item span { font-size: 0.82rem; color: var(--muted); }
 
+.hero-media { position: relative; }
 .hero-frame {
   position: relative;
   margin: 0;
   overflow: hidden;
-  aspect-ratio: 4 / 3;
-  background: #000;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  width: 100%;                    /* explicit, so the height cap below trims height only and never narrows the frame */
+  aspect-ratio: 5 / 4;
+  max-height: min(80vh, 780px);   /* keeps the clip from towering on ultra-wide screens */
+  background: transparent;        /* the clip sits directly on the page colour */
 }
 .hero-video {
   position: absolute;
@@ -310,65 +311,77 @@ button { font: inherit; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 38% 50%;      /* keeps the camera and the face both in frame */
+  object-position: 38% 50%;       /* keeps the camera and the face both in frame */
   transition: opacity 0.35s ease;
 }
-.hero-video.is-dipping { opacity: 0; }   /* brief dip to black at the loop point */
-.hero-scrim {
+.hero-video.is-dipping { opacity: 0; }
+
+/* Soft edges: the page colour fading to clear, so the clip melts into the background
+   instead of sitting in a box. (rgba, not "transparent", avoids a grey fringe in Safari.) */
+.hero-frame::before,
+.hero-frame::after {
+  content: "";
   position: absolute;
-  inset: auto 0 0 0;
-  height: 42%;
-  background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0));
+  inset: 0;
+  z-index: 1;
   pointer-events: none;
 }
+.hero-frame::after {              /* top and bottom edges: long, eased ramps so no edge is visible */
+  background: linear-gradient(to bottom,
+    rgba(11,11,12,1)    0%,
+    rgba(11,11,12,0.9)  5%,
+    rgba(11,11,12,0.72) 10%,
+    rgba(11,11,12,0.52) 15%,
+    rgba(11,11,12,0.34) 20%,
+    rgba(11,11,12,0.19) 25%,
+    rgba(11,11,12,0.08) 31%,
+    rgba(11,11,12,0)    38%,
+    rgba(11,11,12,0)    70%,
+    rgba(11,11,12,0.08) 76%,
+    rgba(11,11,12,0.26) 83%,
+    rgba(11,11,12,0.58) 91%,
+    rgba(11,11,12,0.9)  97%,
+    rgba(11,11,12,1)    100%);
+}
+.hero-frame::before { display: none; }   /* left edge: wide screens only, see below */
+
 .hero-logo {
   position: absolute;
-  left: clamp(1rem, 2.2vw, 1.75rem);
-  bottom: clamp(1.1rem, 2.4vw, 1.75rem);
-  width: clamp(104px, 12vw, 156px);
+  z-index: 2;
+  right: clamp(1rem, 2.4vw, 1.9rem);
+  bottom: clamp(1.4rem, 3vw, 2.3rem);
+  width: clamp(92px, 10.5vw, 140px);
   height: auto;
+  opacity: 0.94;
+  filter: drop-shadow(0 1px 6px rgba(0,0,0,0.5));
   pointer-events: none;
 }
-.hero-ctl {
-  position: absolute;
-  right: clamp(1rem, 2.2vw, 1.75rem);
-  bottom: clamp(1.1rem, 2.4vw, 1.75rem);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  padding: 0;
-  border: 1px solid rgba(255,255,255,0.4);
-  border-radius: var(--radius-md);
-  background: rgba(0,0,0,0.55);
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-.hero-ctl:hover { background: var(--accent); border-color: var(--accent); }
-.hero-ctl svg { width: 1rem; height: 1rem; }
-.hero-ctl .icon-play { display: none; }
-.hero-frame.is-paused .hero-ctl .icon-play { display: block; }
-.hero-frame.is-paused .hero-ctl .icon-pause { display: none; }
-.hero-progress {
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 3px;
-  background: rgba(255,255,255,0.22);
-}
-.hero-progress span {
-  display: block;
-  height: 100%;
-  background: var(--accent-on-dark);
-  transform: scaleX(0);
-  transform-origin: 0 50%;
+
+/* Wide screens: the clip bleeds off the right edge of the window and fades in from the left */
+@media (min-width: 1001px) {
+  .hero-media { margin-right: calc((min(1180px, 100vw - 2.5rem) - 100vw) / 2); }
+  .hero-frame::before {
+    display: block;
+    background: linear-gradient(to right,
+      rgba(11,11,12,1)    0%,
+      rgba(11,11,12,0.72) 7%,
+      rgba(11,11,12,0.42) 14%,
+      rgba(11,11,12,0.18) 22%,
+      rgba(11,11,12,0.05) 30%,
+      rgba(11,11,12,0)    36%);
+  }
 }
 
-/* Wide screens: the video bleeds off the right edge of the window */
-@media (min-width: 1101px) {
-  .hero-media { margin-right: calc((min(1180px, 100vw - 2.5rem) - 100vw) / 2); }
-  .hero-frame { border-right: 0; border-radius: var(--radius-lg) 0 0 var(--radius-lg); }
+/* Tablets and phones: edge to edge, stacked under the text, fading in from above and out below */
+@media (max-width: 1000px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .hero-section { padding-bottom: 1rem; }       /* the fade already supplies the breathing room under the clip */
+  .hero-media { margin-inline: -1.25rem; margin-top: -1rem; }
+  .hero-frame { aspect-ratio: 3 / 2; }
+}
+@media (max-width: 600px) {
+  .hero-frame { aspect-ratio: 1 / 1; }
+  .hero-video { object-position: 34% 50%; }
 }
 
 /* ── Marquee ────────────────────────────────────────────── */

@@ -122,13 +122,7 @@
                      aria-label="Isaiah Afolabi operating a camera on a gimbal at an event">
                 <source src="assets/video/hero-reel.mp4" type="video/mp4" />
               </video>
-              <div class="hero-scrim" aria-hidden="true"></div>
               <img class="hero-logo" src="assets/logo-white.png" alt="DigitLab Media" width="800" height="285" />
-              <button class="hero-ctl" id="hero-toggle" type="button" aria-label="Pause video">
-                <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
-                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="7,4 20,12 7,20"/></svg>
-              </button>
-              <div class="hero-progress" aria-hidden="true"><span></span></div>
             </figure>
           </div>
 
@@ -928,68 +922,52 @@
     backToTop?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
     /* ── Hero video ───────────────────────────────────────────
-       Muted autoplay loop with a pause control (WCAG 2.2.2: moving content
-       that runs over 5 seconds must be pausable). Behaviour:
-       - the loop dips to black just before the end, because the clip
-         changes background partway through and a hard cut would jar
-       - pauses while off-screen to save battery and data
-       - honours prefers-reduced-motion: stays on the poster until played
+       Plays on its own, muted, on a loop. Notes:
+       - the clip changes background in its first two seconds, so the loop
+         dips to the page colour just before the end instead of hard-cutting
+       - pauses while off-screen (saves battery and data), resumes on return
+       - prefers-reduced-motion: stays on the still poster, never autoplays
+       - if a browser blocks autoplay (e.g. iOS Low Power Mode) the poster
+         stays and a tap on the video starts it
     ─────────────────────────────────────────────────────── */
     (() => {
       const frame = document.getElementById('hero-frame');
       const video = document.getElementById('hero-video');
-      const toggle = document.getElementById('hero-toggle');
-      const bar = document.querySelector('.hero-progress span');
-      if (!frame || !video || !toggle) return;
+      if (!frame || !video) return;
 
       const DIP_SECONDS = 0.35;
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      let userPaused = reduceMotion;
       let inView = true;
       let raf = 0;
 
-      const setState = (playing) => {
-        frame.classList.toggle('is-paused', !playing);
-        toggle.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
-      };
-      const play = () => video.play().then(() => setState(true)).catch(() => setState(false));
-      const pause = () => { video.pause(); setState(false); };
+      const play = () => { video.play().catch(() => {}); };
 
-      const tick = () => {
+      const watchLoopPoint = () => {
         const d = video.duration;
-        if (d) {
-          bar.style.transform = `scaleX(${Math.min(video.currentTime / d, 1)})`;
-          video.classList.toggle('is-dipping', d - video.currentTime < DIP_SECONDS);
-        }
-        raf = requestAnimationFrame(tick);
+        if (d) video.classList.toggle('is-dipping', d - video.currentTime < DIP_SECONDS);
+        raf = requestAnimationFrame(watchLoopPoint);
       };
 
-      video.addEventListener('playing', () => { cancelAnimationFrame(raf); tick(); setState(true); });
+      video.addEventListener('playing', () => { cancelAnimationFrame(raf); watchLoopPoint(); });
       video.addEventListener('pause', () => cancelAnimationFrame(raf));
       video.addEventListener('ended', () => {
         video.currentTime = 0;
         video.classList.remove('is-dipping');
-        if (!userPaused && inView) play();
+        if (inView) play();
       });
-      video.addEventListener('error', () => { toggle.hidden = true; bar.parentElement.hidden = true; });
-
-      toggle.addEventListener('click', () => {
-        userPaused = !video.paused;      // playing now → the visitor is pausing it
-        if (video.paused) play(); else pause();
-      });
+      video.addEventListener('click', () => { if (video.paused) play(); });
 
       if ('IntersectionObserver' in window) {
         new IntersectionObserver(([entry]) => {
           inView = entry.isIntersecting;
           if (!inView) video.pause();
-          else if (!userPaused) play();
-        }, { threshold: 0.25 }).observe(frame);
+          else if (!reduceMotion) play();
+        }, { threshold: 0.2 }).observe(frame);
       }
 
       if (reduceMotion) {
         video.removeAttribute('autoplay');
         video.pause();
-        setState(false);
       }
     })();
 
