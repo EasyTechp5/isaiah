@@ -909,6 +909,50 @@
     }
     if (motionOK) document.querySelectorAll('.hero-copy h1, .section-title').forEach(splitWords);
 
+    /* Typewriter for the hero statement. The full text stays in the page for
+       search engines and screen readers; only the visual copy is typed. */
+    (() => {
+      const p = document.querySelector('.hero-text p:not(.hero-lead)');
+      if (!p || !motionOK) return;
+      const text = p.textContent.trim();
+      p.textContent = '';
+      const sr = document.createElement('span');
+      sr.className = 'sr-only';
+      sr.textContent = text;
+      const visual = document.createElement('span');
+      visual.setAttribute('aria-hidden', 'true');
+      const chars = [];
+      text.split(' ').forEach((word, wi, all) => {
+        const w = document.createElement('span');
+        w.className = 'tw-word';
+        [...word].forEach(ch => {
+          const c = document.createElement('span');
+          c.className = 'tw-char';
+          c.textContent = ch;
+          w.appendChild(c);
+          chars.push(c);
+        });
+        visual.appendChild(w);
+        if (wi < all.length - 1) visual.appendChild(document.createTextNode(' '));
+      });
+      p.append(sr, visual);
+
+      const START_DELAY = 1300, PER_CHAR = 20;
+      let i = 0, prev = null;
+      const type = () => {
+        if (prev) prev.classList.remove('cur');
+        if (i >= chars.length) return;
+        const c = chars[i++];
+        c.classList.add('on', 'cur');
+        prev = c;
+        // a touch longer pause after commas and full stops, like real typing
+        const pause = /[,.]/.test(c.textContent) ? PER_CHAR * 9 : PER_CHAR;
+        if (i >= chars.length) setTimeout(() => c.classList.remove('cur'), 1800);
+        else setTimeout(type, pause);
+      };
+      setTimeout(type, START_DELAY);
+    })();
+
     /* Scroll-aware UI: nav highlight, portfolio bar, hero depth */
     const navLinks = [...document.querySelectorAll('.site-nav a[href^="#"]:not(.nav-cta)')];
     const spyMap = [['about', '#about'], ['services', '#services'], ['process', '#services'], ['work', '#work'], ['motion', '#work'],
