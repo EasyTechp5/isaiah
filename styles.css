@@ -254,13 +254,13 @@ button { font: inherit; }
   gap: 4rem;
   align-items: center;
 }
-.hero-copy { display: grid; gap: 1.5rem; justify-items: start; }
+.hero-copy { display: grid; gap: 1.6rem; justify-items: start; }
 
 .eyebrow {
   margin: 0;
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -274,12 +274,21 @@ button { font: inherit; }
   text-wrap: balance;
   color: #fff;
 }
-.hero-text {
+.hero-text { display: grid; gap: 1.1rem; max-width: 46ch; }
+.hero-text p {
   margin: 0;
-  max-width: 50ch;
-  font-size: 1.05rem;
-  line-height: 1.8;
-  color: rgba(255,255,255,0.7);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.68);
+  text-wrap: pretty;               /* avoids a single orphaned word on the last line */
+}
+.hero-text .hero-lead {            /* the standfirst: larger and brighter, so the eye has a clear order */
+  font-size: clamp(1.15rem, 1.45vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  color: rgba(255,255,255,0.94);
+  text-wrap: balance;
 }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 0.85rem; }
 .hero-trust { margin: 0; font-size: 0.88rem; color: var(--muted); }
