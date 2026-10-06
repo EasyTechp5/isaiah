@@ -27,6 +27,7 @@
     <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="assets/hero-poster.jpg" as="image" fetchpriority="high" />
+    <script>document.documentElement.classList.add("js")</script>
     <link rel="stylesheet" href="styles.css" />
     <script type="application/ld+json">
     {
@@ -92,25 +93,6 @@
             <div class="hero-text">
               <p class="hero-lead">I create visual stories that resonate across cultures and markets.</p>
               <p>Partnering with brands, organizations, and creators worldwide, I transform ideas into cinematic video, compelling motion graphics, and story-driven content that captures attention, builds trust, and inspires action.</p>
-            </div>
-            <div class="hero-actions">
-              <a class="button button-primary" href="#contact">Start a project</a>
-              <a class="button button-ghost" href="#work">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                View work
-              </a>
-            </div>
-            <p class="hero-trust">Trusted by creators and brands across Nigeria, USA, and Europe.</p>
-
-            <div class="hero-stats">
-              <div class="stat-item">
-                <strong>100+</strong>
-                <span>Video projects</span>
-              </div>
-              <div class="stat-item">
-                <strong>40+</strong>
-                <span>Motion graphics</span>
-              </div>
             </div>
           </div>
 
@@ -879,6 +861,15 @@
       </div>
     </footer>
 
+    <nav class="work-nav" id="work-nav" aria-label="Portfolio categories">
+      <a href="#work" data-target="work">Talking Head</a>
+      <a href="#motion" data-target="motion">Animation</a>
+      <a href="#voiceover" data-target="voiceover">Voiceover</a>
+      <a href="#events" data-target="events">Events</a>
+      <a href="#documentary" data-target="documentary">Documentary</a>
+      <a href="#reels" data-target="reels">Reels</a>
+    </nav>
+
     <a class="whatsapp-float" href="https://wa.me/2348146426402?text=Hi%20Isaiah%2C%20I%27d%20like%20to%20discuss%20a%20video%20project."
        target="_blank" rel="noopener noreferrer" aria-label="Chat with Isaiah on WhatsApp">
       <svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.09 3.2 5.07 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm0 18.02h-.01c-1.52 0-3.02-.41-4.32-1.18l-.31-.18-3.21.84.86-3.13-.2-.32a8.22 8.22 0 0 1-1.26-4.39c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.41a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.23 8.23z"/></svg>
@@ -897,6 +888,70 @@
     let lastScrollY = window.scrollY;
     let scrollTicking = false;
 
+    /* Word-by-word reveal for headings (skipped for reduced motion) */
+    const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function splitWords(el) {
+      const words = el.textContent.trim().split(/\s+/);
+      el.setAttribute('aria-label', words.join(' '));
+      el.textContent = '';
+      words.forEach((word, i) => {
+        const outer = document.createElement('span');
+        outer.className = 'w';
+        outer.setAttribute('aria-hidden', 'true');
+        const inner = document.createElement('span');
+        inner.style.setProperty('--i', i);
+        inner.textContent = word;
+        outer.appendChild(inner);
+        el.appendChild(outer);
+        if (i < words.length - 1) el.appendChild(document.createTextNode(' '));
+      });
+      el.classList.add('is-split');
+    }
+    if (motionOK) document.querySelectorAll('.hero-copy h1, .section-title').forEach(splitWords);
+
+    /* Scroll-aware UI: nav highlight, portfolio bar, hero depth */
+    const navLinks = [...document.querySelectorAll('.site-nav a[href^="#"]:not(.nav-cta)')];
+    const spyMap = [['about', '#about'], ['services', '#services'], ['process', '#services'], ['work', '#work'], ['motion', '#work'],
+                    ['voiceover', '#work'], ['events', '#work'], ['documentary', '#work'], ['reels', '#work'],
+                    ['pricing', '#pricing'], ['testimonials', '#testimonials'], ['contact', '#contact']]
+      .map(([id, link]) => [document.getElementById(id), link]).filter(([el]) => el);
+    const workNav = document.getElementById('work-nav');
+    const workChips = workNav ? [...workNav.querySelectorAll('a')] : [];
+    const workSections = workChips.map(a => document.getElementById(a.dataset.target));
+    const heroCopy = document.querySelector('.hero-copy');
+    const heroMedia = document.querySelector('.hero-media');
+    const wideHero = window.matchMedia('(min-width: 1001px)');
+
+    function updateScrollEffects(y) {
+      const probe = window.innerHeight * 0.35;
+      let current = null;
+      spyMap.forEach(([el, link]) => { if (el.getBoundingClientRect().top <= probe) current = link; });
+      navLinks.forEach(a => a.toggleAttribute('aria-current', a.getAttribute('href') === current));
+
+      if (workNav) {
+        const first = workSections[0].getBoundingClientRect().top;
+        const last = workSections[workSections.length - 1].getBoundingClientRect().bottom;
+        const show = first < window.innerHeight * 0.4 && last > window.innerHeight * 0.55;
+        workNav.classList.toggle('visible', show);
+        if (show) {
+          let active = 0;
+          workSections.forEach((s, i) => { if (s.getBoundingClientRect().top <= probe) active = i; });
+          workChips.forEach((a, i) => {
+            const on = i === active;
+            if (on && a.getAttribute('aria-current') !== 'true') workNav.scrollTo({ left: a.offsetLeft - 24, behavior: 'smooth' });
+            on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current');
+          });
+        }
+      }
+
+      if (heroCopy && heroMedia && motionOK && wideHero.matches) {
+        const p = Math.min(Math.max(y / window.innerHeight, 0), 1);
+        heroCopy.style.transform = p ? `translate3d(0, ${p * 36}px, 0)` : '';
+        heroCopy.style.opacity = p ? String(1 - p * 0.9) : '';
+        heroMedia.style.transform = p ? `translate3d(0, ${p * -22}px, 0) scale(${1 + p * 0.035})` : '';
+      }
+    }
+
     function updateScrollUI() {
       const y = window.scrollY;
       siteHeader.classList.toggle('scrolled', y > 40);
@@ -911,6 +966,8 @@
         progressBar.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
       }
       if (backToTop) backToTop.classList.toggle('visible', y > 600);
+      document.body.classList.toggle('header-is-hidden', siteHeader.classList.contains('header-hidden'));
+      updateScrollEffects(y);
       scrollTicking = false;
     }
     window.addEventListener('scroll', () => {
